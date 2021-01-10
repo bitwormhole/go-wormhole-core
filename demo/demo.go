@@ -1,8 +1,8 @@
 package demo
 
 import (
-	"github.com/bitwormhole/gss/application"
-	"github.com/bitwormhole/gss/lang"
+	"github.com/bitwormhole/go-wormhole-core/application"
+	"github.com/bitwormhole/go-wormhole-core/lang"
 )
 
 // Driver class

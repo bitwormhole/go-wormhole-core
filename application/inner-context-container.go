@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/bitwormhole/gss/collection"
+	"github.com/bitwormhole/go-wormhole-core/collection"
 )
 
 // innerContextContainer 定义了一个通用的 Context 的内部结构

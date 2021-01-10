@@ -1,6 +1,6 @@
 package application
 
-import "github.com/bitwormhole/gss/lang"
+import "github.com/bitwormhole/go-wormhole-core/lang"
 
 // ComponentScope 枚举表示组件的作用域
 type ComponentScope uint32

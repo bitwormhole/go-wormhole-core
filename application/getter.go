@@ -1,6 +1,6 @@
 package application
 
-import "github.com/bitwormhole/gss/lang"
+import "github.com/bitwormhole/go-wormhole-core/lang"
 
 // ContextGetter 接口向 Context 的使用者提供简易的 getter 方法
 type ContextGetter interface {

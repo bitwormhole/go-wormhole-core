@@ -1,6 +1,6 @@
 package application
 
-import "github.com/bitwormhole/gss/collection"
+import "github.com/bitwormhole/go-wormhole-core/collection"
 
 // Context 表示一个通用的上下文对象
 type Context interface {

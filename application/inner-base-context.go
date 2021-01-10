@@ -1,6 +1,6 @@
 package application
 
-import "github.com/bitwormhole/gss/collection"
+import "github.com/bitwormhole/go-wormhole-core/collection"
 
 type baseContext struct {
 	container *innerContextContainer

@@ -1,4 +1,4 @@
-package file
+package fs
 
 type innerPosixPlatform struct{}
 

@@ -1,7 +1,7 @@
 package collection
 
 import (
-	"github.com/bitwormhole/gss/lang"
+	"github.com/bitwormhole/go-wormhole-core/lang"
 )
 
 type ReleasePool interface {

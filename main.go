@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 
-	"github.com/bitwormhole/gss/application"
-	"github.com/bitwormhole/gss/demo"
-	"github.com/bitwormhole/gss/io/file"
+	"github.com/bitwormhole/go-wormhole-core/application"
+	"github.com/bitwormhole/go-wormhole-core/demo"
+	"github.com/bitwormhole/go-wormhole-core/io/fs"
 )
 
 func main() {
 
 	config := &application.Configuration{}
-	fs := file.Default()
-	roots := fs.Roots()
+	fsys := fs.Default()
+	roots := fsys.Roots()
 
 	demo.RegisterComponents(config)
 

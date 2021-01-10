@@ -49,7 +49,7 @@ func (inst *innerComponentRegistration) init(src ComponentRegistration, index in
 	// id (aka.name)
 	id = strings.TrimSpace(id)
 	if len(id) == 0 {
-		id = fmt.Sprint("#.gss-component-", index, " ", class)
+		id = fmt.Sprint("#.wh-component-", index, " ", class)
 	} else if id[0] == '#' {
 		// NOP
 	} else {
