@@ -58,6 +58,10 @@ type Path interface {
 // FileIO 表示对一个具体文件的IO
 type FileIO interface {
 	Path() Path
+	WriteText(text string, create bool) error
+	WriteBinary(data []byte, create bool) error
+	ReadText() (string, error)
+	ReadBinary() ([]byte, error)
 }
 
 // FileMeta  表示对一个具体文件的 posix liked mode

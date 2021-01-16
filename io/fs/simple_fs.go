@@ -239,7 +239,7 @@ func (inst *innerPath) GetHref(name string) Path {
 }
 
 func (inst *innerPath) GetIO() FileIO {
-	return nil
+	return &innerFileIO{path: inst}
 }
 
 func (inst *innerPath) GetMeta() FileMeta {
