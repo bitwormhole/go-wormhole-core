@@ -24,8 +24,18 @@ func TestSimplePropertiesAll(t *testing.T) {
 	props.SetProperty("test.x.y.z.a", "yes")
 	props.SetProperty("test.x.y.z.b", "no")
 
-	text := FormatPropertiesWithSegment(props)
+	text1 := FormatPropertiesWithSegment(props)
+	props2, err := ParseProperties(text1, nil)
+	text2 := FormatPropertiesWithSegment(props2)
 
-	t.Log(text)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if text1 == text2 {
+		t.Log(text1)
+	} else {
+		t.Error("text1 != text2")
+	}
 
 }
