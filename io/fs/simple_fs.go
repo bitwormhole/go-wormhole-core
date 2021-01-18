@@ -1,6 +1,7 @@
 package fs
 
 import (
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -252,13 +253,25 @@ func (inst *innerPath) SetMeta(mode FileMeta) {
 	// TODO
 }
 
-func (inst *innerPath) CreateFile() error {
-	return inst.CreateFileWithSize(0)
+func (inst *innerPath) CreateFile(mode IoMode) error {
+	return inst.CreateFileWithSize(0, mode)
 }
 
-func (inst *innerPath) CreateFileWithSize(size int64) error {
+func (inst *innerPath) CreateFileWithSize(size int64, mode IoMode) error {
 
-	file, err := os.OpenFile(inst.path, os.O_CREATE|os.O_WRONLY, 0)
+	if inst.Exists() {
+		return errors.New("the file exists")
+	}
+
+	flag := os.O_CREATE | os.O_WRONLY
+	var perm os.FileMode = 0644
+
+	if mode != nil {
+		flag = mode.Flag()
+		perm = mode.Perm()
+	}
+
+	file, err := os.OpenFile(inst.path, flag, perm)
 	if err != nil {
 		return err
 	}

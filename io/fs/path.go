@@ -40,8 +40,8 @@ type Path interface {
 
 	GetIO() FileIO
 
-	CreateFile() error
-	CreateFileWithSize(size int64) error
+	CreateFile(mode IoMode) error
+	CreateFileWithSize(size int64, mode IoMode) error
 
 	CopyTo(target Path) error
 	MoveTo(target Path) error

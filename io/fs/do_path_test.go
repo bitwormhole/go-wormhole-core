@@ -56,7 +56,7 @@ func TestPathIsDir(t *testing.T) {
 	dir := prepareDirForTest(t)
 	file := dir.GetChild("test.path.isdir")
 
-	file.CreateFile()
+	file.CreateFile(nil)
 
 	if !dir.IsDir() {
 		t.Error("error: dir is not dir")
@@ -72,7 +72,7 @@ func TestPathIsFile(t *testing.T) {
 	dir := prepareDirForTest(t)
 	file := dir.GetChild("test.path.isfile")
 
-	file.CreateFile()
+	file.CreateFile(nil)
 
 	if dir.IsFile() {
 		t.Error("error: dir is file")
@@ -135,7 +135,7 @@ func TestPathSize(t *testing.T) {
 	size1 := int64(1234)
 	dir := prepareDirForTest(t)
 	file := dir.GetChild("test.pathSize")
-	err := file.CreateFileWithSize(size1)
+	err := file.CreateFileWithSize(size1, nil)
 
 	if err != nil {
 		t.Error("cannot create file: " + file.Path())
@@ -160,7 +160,7 @@ func TestPathCreateFile(t *testing.T) {
 
 	dir := prepareDirForTest(t)
 	file := dir.GetChild("test.path.createfile")
-	err := file.CreateFile()
+	err := file.CreateFile(nil)
 
 	if err != nil {
 		t.Error("cannot create file: ", err)
@@ -180,7 +180,7 @@ func TestPathCreateFileWithSize(t *testing.T) {
 	size := 12345
 	dir := prepareDirForTest(t)
 	file := dir.GetChild("test.path.createfile")
-	err := file.CreateFileWithSize(int64(size))
+	err := file.CreateFileWithSize(int64(size), nil)
 
 	if err != nil {
 		t.Error("cannot create file: ", err)
@@ -234,7 +234,7 @@ func TestPathGetMoveTo(t *testing.T) {
 	file2 := dir.GetChild("test.path.moveto.file2")
 
 	size1 := int64(123)
-	file1.CreateFileWithSize(size1)
+	file1.CreateFileWithSize(size1, nil)
 	file1.MoveTo(file2)
 	size2 := file2.Size()
 
@@ -251,7 +251,7 @@ func TestPathCopyTo(t *testing.T) {
 	file2 := dir.GetChild("test.path.copyto.file2")
 
 	size1 := int64(1234)
-	file1.CreateFileWithSize(size1)
+	file1.CreateFileWithSize(size1, nil)
 	file1.CopyTo(file2)
 	size2 := file2.Size()
 
@@ -326,7 +326,7 @@ func TestPathGetHref(t *testing.T) {
 
 	dir := prepareDirForTest(t)
 	file := dir.GetChild("test.path.gethref")
-	file.CreateFile()
+	file.CreateFile(nil)
 
 	xyz1 := dir.GetChild("xyz")
 	xyz2 := file.GetHref("./xyz")

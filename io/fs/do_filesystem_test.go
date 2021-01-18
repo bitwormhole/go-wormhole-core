@@ -10,7 +10,7 @@ func prepareDirForTest(t *testing.T) Path {
 	dir := fs.GetPath(t.TempDir())
 
 	dir.GetChild("chdir1").Mkdirs()
-	dir.GetChild("chfile1").CreateFileWithSize(1024*16 + 666)
+	dir.GetChild("chfile1").CreateFileWithSize(1024*16+666, nil)
 
 	return dir
 }
