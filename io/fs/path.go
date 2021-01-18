@@ -1,5 +1,9 @@
 package fs
 
+import (
+	"os"
+)
+
 // FileSystem  代表一个抽象的文件系统
 type FileSystem interface {
 	Roots() []Path
@@ -55,11 +59,17 @@ type Path interface {
 	GetHref(name string) Path
 }
 
+// IoMode 执行文件IO操作的模式
+type IoMode interface {
+	Flag() int
+	Perm() os.FileMode
+}
+
 // FileIO 表示对一个具体文件的IO
 type FileIO interface {
 	Path() Path
-	WriteText(text string, create bool) error
-	WriteBinary(data []byte, create bool) error
+	WriteText(text string, mode IoMode) error
+	WriteBinary(data []byte, mode IoMode) error
 	ReadText() (string, error)
 	ReadBinary() ([]byte, error)
 }

@@ -14,7 +14,7 @@ func TestWriteText_ReadText(t *testing.T) {
 	file := dir.GetChild("test.writeText")
 	fio := file.GetIO()
 
-	err := fio.WriteText(text0, true)
+	err := fio.WriteText(text0, nil)
 	if err != nil {
 		t.Error(err)
 		return
@@ -40,7 +40,7 @@ func TestWriteBinary(t *testing.T) {
 	file := dir.GetChild("test.writeBinary")
 	fio := file.GetIO()
 
-	err := fio.WriteBinary(bin0, true)
+	err := fio.WriteBinary(bin0, nil)
 	if err != nil {
 		t.Error(err)
 		return

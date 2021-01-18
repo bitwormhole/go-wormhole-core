@@ -27,13 +27,16 @@ func (inst *innerFileIO) ReadText() (string, error) {
 	return string(data), nil
 }
 
-func (inst *innerFileIO) WriteBinary(data []byte, create bool) error {
+func (inst *innerFileIO) WriteBinary(data []byte, mode IoMode) error {
+	var perm os.FileMode = 0755
+	if mode != nil {
+		perm = mode.Perm()
+	}
 	filename := inst.path.path
-	mode := os.FileMode(0666)
-	return ioutil.WriteFile(filename, data, mode)
+	return ioutil.WriteFile(filename, data, perm)
 }
 
-func (inst *innerFileIO) WriteText(text string, create bool) error {
+func (inst *innerFileIO) WriteText(text string, mode IoMode) error {
 	data := []byte(text)
-	return inst.WriteBinary(data, create)
+	return inst.WriteBinary(data, mode)
 }
