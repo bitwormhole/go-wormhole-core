@@ -1,18 +1,20 @@
-package application
+package impl
 
 import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/bitwormhole/go-wormhole-core/application"
 )
 
 type innerComponentRegistration struct {
-	ComponentRegistration
+	application.ComponentRegistration
 
 	id      string
 	class   string
-	scope   ComponentScope
-	factory ComponentFactory
+	scope   application.ComponentScope
+	factory application.ComponentFactory
 }
 
 func (inst *innerComponentRegistration) normalizeClassString(class string) string {
@@ -36,7 +38,7 @@ func (inst *innerComponentRegistration) normalizeClassString(class string) strin
 	return b.String()
 }
 
-func (inst *innerComponentRegistration) init(src ComponentRegistration, index int) {
+func (inst *innerComponentRegistration) init(src application.ComponentRegistration, index int) {
 
 	info := src.GetInfo()
 	id := info.Name
@@ -57,8 +59,8 @@ func (inst *innerComponentRegistration) init(src ComponentRegistration, index in
 	}
 
 	// scope
-	if (scope <= ScopeMin) || (ScopeMax <= scope) {
-		scope = ScopeSingleton
+	if (scope <= application.ScopeMin) || (application.ScopeMax <= scope) {
+		scope = application.ScopeSingleton
 	}
 
 	// fill inst

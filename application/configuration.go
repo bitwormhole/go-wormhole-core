@@ -1,18 +1,26 @@
 package application
 
+// ComponentRegistration 表示组件的注册信息
+type ComponentRegistration struct {
+	ID     string
+	Class  string
+	Scope  ComponentScope
+	Source func() ComponentInstanceRef
+}
+
 // Configuration 表示应用程序配置
 type Configuration struct {
-	registrations []ComponentRegistration
+	registrations []*ComponentRegistration
 }
 
-func (inst *Configuration) tryInit() {
-	if inst.registrations == nil {
-		inst.registrations = make([]ComponentRegistration, 0)
+func (inst *Configuration) Component(item *ComponentRegistration) {
+
+	list := inst.registrations
+
+	if list == nil {
+		list = make([]*ComponentRegistration, 0)
 	}
-}
 
-// Component 方法用于注册组件
-func (inst *Configuration) Component(source ComponentRegistration) {
-	inst.tryInit()
-	inst.registrations = append(inst.registrations, source)
+	list = append(list, item)
+	inst.registrations = list
 }

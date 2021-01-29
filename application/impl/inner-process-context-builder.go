@@ -1,4 +1,6 @@
-package application
+package impl
+
+import "github.com/bitwormhole/go-wormhole-core/application"
 
 // innerProcessContext
 type innerProcessContext struct {
@@ -8,15 +10,15 @@ type innerProcessContext struct {
 	appVersion string
 }
 
-func (inst *innerProcessContext) GetParent() NodeContext {
+func (inst *innerProcessContext) GetParent() application.NodeContext {
 	return nil
 }
 
-func (inst *innerProcessContext) GetRoot() ProcessContext {
+func (inst *innerProcessContext) GetRoot() application.ProcessContext {
 	return inst
 }
 
-func (inst *innerProcessContext) NewChild() FragmentContext {
+func (inst *innerProcessContext) NewChild() application.FragmentContext {
 	return nil
 }
 
@@ -38,11 +40,11 @@ func (inst *innerProcessContext) GetShutdownTimestamp() int64 {
 
 // ProcessContextBuilder 是 ProcessContext 实例的创建者
 type ProcessContextBuilder struct {
-	config *Configuration
+	config *application.Configuration
 }
 
 // Create 方法用于创建进程上下文
-func (inst *ProcessContextBuilder) Create() (ProcessContext, error) {
+func (inst *ProcessContextBuilder) Create() (application.ProcessContext, error) {
 
 	// 构造容器中的各个集合
 
@@ -68,7 +70,7 @@ func (inst *ProcessContextBuilder) Create() (ProcessContext, error) {
 	return pc, nil
 }
 
-func (inst *ProcessContextBuilder) loadComponent(reg ComponentRegistration) ComponentHolder {
+func (inst *ProcessContextBuilder) loadComponent(reg application.ComponentRegistration) ComponentHolder {
 	info := reg.GetInfo()
 	switch info.Scope {
 	case ScopeContext:
@@ -82,7 +84,7 @@ func (inst *ProcessContextBuilder) loadComponent(reg ComponentRegistration) Comp
 	return createSingletonScopeComponentHolder(reg)
 }
 
-func (inst *ProcessContextBuilder) prepareComponentRegistration(cr ComponentRegistration, index int) ComponentRegistration {
+func (inst *ProcessContextBuilder) prepareComponentRegistration(cr application.ComponentRegistration, index int) application.ComponentRegistration {
 	cr2 := &innerComponentRegistration{}
 	cr2.init(cr, index)
 	return cr2

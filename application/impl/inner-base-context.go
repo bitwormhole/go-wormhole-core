@@ -1,4 +1,4 @@
-package application
+package impl
 
 import "github.com/bitwormhole/go-wormhole-core/collection"
 
