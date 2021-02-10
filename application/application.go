@@ -1,7 +1,7 @@
 package application
 
 // Run 函数启动一个应用实例，返回应用上下文
-func Run(config *Configuration) (ProcessContext, error) {
+func Run(config Configuration) (ProcessContext, error) {
 	// TODO
 	//	builder := &ProcessContextBuilder{}
 	//	builder.Init(config)

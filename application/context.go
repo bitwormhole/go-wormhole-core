@@ -1,11 +1,14 @@
 package application
 
-import "github.com/bitwormhole/go-wormhole-core/collection"
+import (
+	"github.com/bitwormhole/go-wormhole-core/collection"
+	"github.com/bitwormhole/go-wormhole-core/lang"
+)
 
 // Context 表示一个通用的上下文对象
 type Context interface {
 	GetComponents() Components
-	NewGetter() ContextGetter
+	NewGetter(ec lang.ErrorCollector) ContextGetter
 
 	GetReleasePool() collection.ReleasePool
 

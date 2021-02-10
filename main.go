@@ -4,17 +4,17 @@ import (
 	"fmt"
 
 	"github.com/bitwormhole/go-wormhole-core/application"
-	"github.com/bitwormhole/go-wormhole-core/demo"
+	demo "github.com/bitwormhole/go-wormhole-core/demo/demo-for-config"
 	"github.com/bitwormhole/go-wormhole-core/io/fs"
 )
 
 func main() {
 
-	config := &application.Configuration{}
+	config := &application.SimpleConfiguration{}
 	fsys := fs.Default()
 	roots := fsys.Roots()
 
-	demo.RegisterComponents(config)
+	demo.Config(config)
 
 	context, _ := application.Run(config)
 	code := application.Exit(context)

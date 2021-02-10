@@ -6,35 +6,21 @@ import "github.com/bitwormhole/go-wormhole-core/lang"
 type ComponentScope uint32
 
 const (
-	ScopeMin       ComponentScope = 0 // 最小
+	// ScopeMin 是作用域的最小值
+	ScopeMin ComponentScope = 0 // 最小
+
+	// ScopeSingleton 表示单例模式
 	ScopeSingleton ComponentScope = 1
-	ScopeContext   ComponentScope = 2
+
+	// ScopeContext 表示上下文模式
+	ScopeContext ComponentScope = 2
+
+	// ScopePrototype 表示原型模式
 	ScopePrototype ComponentScope = 3
-	ScopeMax       ComponentScope = 4 // 最大
+
+	// ScopeMax 是作用域的最大值
+	ScopeMax ComponentScope = 4 // 最大
 )
-
-// ComponentAgent 一个具体的组件的代理
-type ComponentAgent interface {
-	IsAlias() bool
-	GetInstance() lang.Object
-	GetInstanceHolder() ComponentInstanceHolder
-	GetFactory() ComponentFactory
-	GetInfo() ComponentInfo
-	GetContext() Context
-	MakeChild(context Context) ComponentAgent
-}
-
-// ComponentInstanceHolder 一个具体的组件的实例托管者
-type ComponentInstanceHolder interface {
-	GetInstance() lang.Object
-
-	GetFactory() ComponentFactory
-	GetContext() Context
-
-	Inject() error
-	Init() error
-	Destroy() error
-}
 
 // ComponentInstanceRef 一个具体的组件的实例的引用
 type ComponentInstanceRef interface {
@@ -44,24 +30,27 @@ type ComponentInstanceRef interface {
 	Destroy() error
 }
 
-// ComponentProvider 一个组件的实例创建者
-type ComponentProvider interface {
-	NewInstance() ComponentInstanceRef
-}
-
 // ComponentFactory 一个组件的工厂
 type ComponentFactory interface {
-	GetInfo() ComponentInfo
-	NewAgent(context Context) ComponentAgent
-	NewInstance(context Context) ComponentInstanceHolder
+	NewInstance() ComponentInstanceRef
 }
 
 // ComponentInfo 一个组件的配置
 type ComponentInfo interface {
 	GetID() string
 	GetClass() string
+	GetAliases() []string
 	GetScope() ComponentScope
-	GetProvider() ComponentProvider
+	GetFactory() ComponentFactory
+}
+
+// ComponentAgent 一个具体的组件的代理
+type ComponentAgent interface {
+	GetInstance() lang.Object
+	GetInstanceRef() ComponentInstanceRef
+	GetInfo() ComponentInfo
+	GetContext() Context
+	MakeChild(context Context) ComponentAgent
 }
 
 // Components 接口表示一个组件的集合
@@ -71,7 +60,7 @@ type Components interface {
 	GetComponentsByClass(classSelector string) []lang.Object
 	////
 	GetAgent(name string) (ComponentAgent, error)
-	SetAgent(name string, value ComponentAgent)
+	SetAgent(name string, agent ComponentAgent)
 	Clear()
 	Export(map[string]ComponentAgent) map[string]ComponentAgent
 	Import(map[string]ComponentAgent)

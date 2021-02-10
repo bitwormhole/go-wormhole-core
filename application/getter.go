@@ -4,8 +4,8 @@ import "github.com/bitwormhole/go-wormhole-core/lang"
 
 // ContextGetter 接口向 Context 的使用者提供简易的 getter 方法
 type ContextGetter interface {
+	ErrorCollector() lang.ErrorCollector
 	Result() error
-	Feedback(success bool, message string)
 
 	GetProperty(name string) string
 	GetPropertySafely(name string, _default string) string
