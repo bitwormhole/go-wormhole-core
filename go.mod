@@ -1,3 +1,3 @@
 module github.com/bitwormhole/go-wormhole-core
 
-go 1.15
+go 1.16

@@ -2,13 +2,14 @@ package config
 
 import (
 	"github.com/bitwormhole/go-wormhole-core/application"
+	"github.com/bitwormhole/go-wormhole-core/application/simple"
 	"github.com/bitwormhole/go-wormhole-core/lang"
 )
 
 // Config config the app
-func Config(config *application.SimpleConfiguration) {
+func Config(config application.ConfigBuilder) {
 
-	config.AddComponent(&application.SimpleCom{
+	config.AddComponent(&simple.ComInfo{
 		ID:    "car1",
 		Class: "car",
 		Scope: application.ScopeSingleton,

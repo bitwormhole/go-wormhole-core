@@ -15,6 +15,10 @@ type ContextGetter interface {
 	GetComponentsByClass(classSelector string) []lang.Object
 }
 
+func NewGetter(context Context) ContextGetter {
+	return &innerContextGetter{context: context}
+}
+
 // innerContextGetter impl ContextGetter
 type innerContextGetter struct {
 	ContextGetter
