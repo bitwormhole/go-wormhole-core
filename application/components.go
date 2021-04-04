@@ -40,8 +40,12 @@ type ComponentInfo interface {
 	GetID() string
 	GetClass() string
 	GetAliases() []string
+	GetClasses() []string
 	GetScope() ComponentScope
 	GetFactory() ComponentFactory
+
+	IsTypeOf(typeName string) bool
+	IsNameOf(alias string) bool
 }
 
 // ComponentAgent 一个具体的组件的代理
