@@ -78,3 +78,7 @@ func (inst *SimpleProperties) Import(src map[string]string) {
 		dst[key] = src[key]
 	}
 }
+
+func CreateProperties() Properties {
+	return &SimpleProperties{}
+}

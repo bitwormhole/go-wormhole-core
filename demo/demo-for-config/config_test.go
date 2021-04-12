@@ -4,11 +4,12 @@ import (
 	"testing"
 
 	"github.com/bitwormhole/go-wormhole-core/application"
+	"github.com/bitwormhole/go-wormhole-core/application/config"
 )
 
 func TestDemo(t *testing.T) {
 
-	config := &application.Configuration{}
+	config := &config.AppConfig{}
 	Config(config)
 
 	context, err := application.Run(config)

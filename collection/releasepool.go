@@ -5,6 +5,13 @@ import (
 )
 
 type ReleasePool interface {
-	Release()
+	Release() []error
 	Push(target lang.Disposable)
+}
+
+func Release(pool ReleasePool) []error {
+	if pool == nil {
+		return nil
+	}
+	return pool.Release()
 }

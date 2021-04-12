@@ -6,6 +6,7 @@ type Properties interface {
 	GetProperty(name string, defaultValue string) string
 	SetProperty(name string, value string)
 	Clear()
+
 	Export(map[string]string) map[string]string
 	Import(map[string]string)
 }

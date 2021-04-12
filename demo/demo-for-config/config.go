@@ -2,14 +2,21 @@ package config
 
 import (
 	"github.com/bitwormhole/go-wormhole-core/application"
-	"github.com/bitwormhole/go-wormhole-core/application/simple"
+	"github.com/bitwormhole/go-wormhole-core/application/config"
 	"github.com/bitwormhole/go-wormhole-core/lang"
 )
 
 // Config config the app
-func Config(config application.ConfigBuilder) {
+func Config(cfg application.ConfigBuilder) {
 
-	config.AddComponent(&simple.ComInfo{
+	cfg.AddComponent(&config.ComInfo{
+		ID:    "x1",
+		Class: "x",
+
+		OnInject: nil,
+	})
+
+	cfg.AddComponent(&config.ComInfo{
 		ID:    "car1",
 		Class: "car",
 		Scope: application.ScopeSingleton,
@@ -23,7 +30,7 @@ func Config(config application.ConfigBuilder) {
 			return car.start()
 		},
 
-		OnInject: func(obj lang.Object, context application.Context) error {
+		OnInject: func(obj lang.Object, context application.RuntimeContext) error {
 
 			car := obj.(Car)
 			getter := context.NewGetter(nil)

@@ -1,6 +1,8 @@
 package application
 
 import (
+	"io"
+
 	"github.com/bitwormhole/go-wormhole-core/collection"
 	"github.com/bitwormhole/go-wormhole-core/lang"
 )
@@ -8,10 +10,7 @@ import (
 // Context 表示一个通用的上下文对象
 type Context interface {
 	GetComponents() Components
-	NewGetter(ec lang.ErrorCollector) ContextGetter
-
 	GetReleasePool() collection.ReleasePool
-
 	GetArguments() collection.Arguments
 	GetAttributes() collection.Attributes
 	GetEnvironment() collection.Environment
@@ -24,10 +23,24 @@ type Context interface {
 type RuntimeContext interface {
 	Context
 
+	// info
+	GetURI() string
 	GetApplicationName() string
 	GetApplicationVersion() string
 	GetStartupTimestamp() int64
 	GetShutdownTimestamp() int64
 
+	// helper
+	SetErrorHandler(h lang.ErrorHandler)
+	GetErrorHandler() lang.ErrorHandler
+	NewGetter(ec lang.ErrorCollector) ContextGetter
 	NewChild() RuntimeContext
+	OpenCreationContext(scope ComponentScope) CreationContext
+}
+
+// CreationContext 是构建时的上下文
+type CreationContext interface {
+	io.Closer
+	GetScope() ComponentScope
+	GetContext() RuntimeContext
 }

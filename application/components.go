@@ -22,17 +22,18 @@ const (
 	ScopeMax ComponentScope = 4 // 最大
 )
 
-// ComponentInstanceRef 一个具体的组件的实例的引用
-type ComponentInstanceRef interface {
-	GetInstance() lang.Object
-	Inject(context Context) error
+// ComponentInstance  一个具体的组件的实例的引用
+type ComponentInstance interface {
+	Get() lang.Object
+	IsLoaded() bool
+	Inject(context RuntimeContext) error
 	Init() error
 	Destroy() error
 }
 
 // ComponentFactory 一个组件的工厂
 type ComponentFactory interface {
-	NewInstance() ComponentInstanceRef
+	NewInstance() ComponentInstance
 }
 
 // ComponentInfo 一个组件的配置
@@ -48,13 +49,13 @@ type ComponentInfo interface {
 	IsNameOf(alias string) bool
 }
 
-// ComponentAgent 一个具体的组件的代理
-type ComponentAgent interface {
-	GetInstance() lang.Object
-	GetInstanceRef() ComponentInstanceRef
+// ComponentHolder 一个具体的组件的代理
+type ComponentHolder interface {
+	GetInstance() ComponentInstance
+	IsOriginalName(name string) bool
 	GetInfo() ComponentInfo
-	GetContext() Context
-	MakeChild(context Context) ComponentAgent
+	GetContext() RuntimeContext
+	MakeChild(context RuntimeContext) ComponentHolder
 }
 
 // Components 接口表示一个组件的集合
@@ -63,9 +64,6 @@ type Components interface {
 	GetComponentByClass(classSelector string) (lang.Object, error)
 	GetComponentsByClass(classSelector string) []lang.Object
 	////
-	GetAgent(name string) (ComponentAgent, error)
-	SetAgent(name string, agent ComponentAgent)
-	Clear()
-	Export(map[string]ComponentAgent) map[string]ComponentAgent
-	Import(map[string]ComponentAgent)
+	Export(map[string]ComponentHolder) map[string]ComponentHolder
+	Import(map[string]ComponentHolder)
 }
