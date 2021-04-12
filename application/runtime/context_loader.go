@@ -2,8 +2,12 @@ package runtime
 
 import (
 	"errors"
+	"fmt"
+	"sort"
+	"strings"
 
 	"github.com/bitwormhole/go-wormhole-core/application"
+	"github.com/bitwormhole/go-wormhole-core/collection"
 	"github.com/bitwormhole/go-wormhole-core/lang"
 )
 
@@ -13,33 +17,46 @@ type RuntimeContextLoader struct {
 	comTable    map[string]application.ComponentHolder
 	context     application.RuntimeContext
 	config      application.Configuration
-	todoInit    application.CreationContext
+	args        []string
 }
 
 // Load 方法根据传入的配置加载运行时上下文
-func (inst *RuntimeContextLoader) Load(config application.Configuration) (application.RuntimeContext, error) {
+func (inst *RuntimeContextLoader) Load(config application.Configuration, args []string) (application.RuntimeContext, error) {
 
 	inst.config = config
 	inst.comTable = make(map[string]application.ComponentHolder)
 	inst.comInfoList = nil
 	inst.context = nil
+	inst.args = args
 
 	tc := &lang.TryChain{}
 
 	tc.Try(func() error {
-		return nil
-	}).Try(func() error {
 		return inst.createRuntimeContext()
+
+	}).Try(func() error {
+		return inst.loadArguments()
+
+	}).Try(func() error {
+		return inst.loadPropertiesInRes1()
+
+	}).Try(func() error {
+		return inst.loadPropertiesInRes2()
+
 	}).Try(func() error {
 		return inst.prepareComInfoList()
+
 	}).Try(func() error {
 		return inst.doCreateComponents()
+
 	}).Try(func() error {
-		return inst.doInjectComponents()
-	}).Try(func() error {
-		return inst.doInitComponents()
+		return inst.loadSingletonComponents()
+
 	}).Try(func() error {
 		return nil
+
+	}).Try(func() error {
+		return inst.logDebugInfo()
 	})
 
 	err := tc.Result()
@@ -48,6 +65,69 @@ func (inst *RuntimeContextLoader) Load(config application.Configuration) (applic
 		ctx = nil
 	}
 	return ctx, err
+}
+
+func (inst *RuntimeContextLoader) loadArguments() error {
+	src := inst.args
+	dst := inst.context.GetArguments()
+	if src == nil {
+		return nil
+	}
+	dst.Import(src)
+	return nil
+}
+
+func (inst *RuntimeContextLoader) loadPropertiesInArgs() error {
+
+	props := inst.context.GetProperties()
+	args := inst.context.GetArguments()
+	array := args.Export()
+
+	//	fmt.Println(props.GetProperty("", "args.array:"))
+
+	for index := range array {
+		text := array[index]
+		//	fmt.Println("   [args.item text:", text, "]")
+		if !strings.HasPrefix(text, "--") {
+			continue
+		}
+		text = strings.TrimLeft(text, "-")
+		parts := strings.SplitN(text, "=", 2)
+		if len(parts) == 2 {
+			key := parts[0]
+			val := parts[1]
+			props.SetProperty(key, val)
+			//	fmt.Println("   [args.item key:", key, " value:", val, "]")
+		}
+	}
+
+	return nil
+}
+
+func (inst *RuntimeContextLoader) loadPropertiesInRes(resourceName string) error {
+	text, err := inst.context.GetResources().GetText(resourceName)
+	if err != nil {
+		return nil
+	}
+	properties := inst.context.GetProperties()
+	properties, err = collection.ParseProperties(text, properties)
+	if err != nil {
+		return err
+	}
+	return inst.loadPropertiesInArgs()
+}
+
+func (inst *RuntimeContextLoader) loadPropertiesInRes1() error {
+	name := "/application.properties"
+	return inst.loadPropertiesInRes(name)
+}
+
+func (inst *RuntimeContextLoader) loadPropertiesInRes2() error {
+	key := "bitwormhole.profiles.active"
+	properties := inst.context.GetProperties()
+	profile := properties.GetProperty(key, "default")
+	name := "/application-" + profile + ".properties"
+	return inst.loadPropertiesInRes(name)
 }
 
 func (inst *RuntimeContextLoader) createRuntimeContext() error {
@@ -146,7 +226,7 @@ func (inst *RuntimeContextLoader) putComHolderToTable(table map[string]applicati
 	return nil
 }
 
-func (inst *RuntimeContextLoader) doInjectComponents() error {
+func (inst *RuntimeContextLoader) loadSingletonComponents() error {
 
 	scopeWant := application.ScopeSingleton
 
@@ -168,14 +248,27 @@ func (inst *RuntimeContextLoader) doInjectComponents() error {
 		}
 	}
 
-	inst.todoInit = cc
-	return nil
+	return cc.Close()
 }
 
-func (inst *RuntimeContextLoader) doInitComponents() error {
-	cc := inst.todoInit
-	if cc == nil {
-		return errors.New("no CreationContext")
+func (inst *RuntimeContextLoader) logDebugInfo() error {
+
+	props := inst.context.GetProperties()
+	table := props.Export(nil)
+	keys := make([]string, 0)
+
+	for key := range table {
+		keys = append(keys, key)
 	}
-	return cc.Close()
+
+	sort.Strings(keys)
+	fmt.Println("context.properties:")
+
+	for index := range keys {
+		k := keys[index]
+		v := table[k]
+		fmt.Println("  " + k + "=[" + v + "]")
+	}
+
+	return nil
 }

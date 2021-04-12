@@ -109,24 +109,63 @@ func (inst *runtimeContextFacade) NewGetter(ec lang.ErrorCollector) application.
 ////////////////////////////////////////////////////////////////////////////////
 // impl runtimeComponentsFacade
 
-func (inst *runtimeComponentsFacade) Import(map[string]application.ComponentHolder) {
-
+func (inst *runtimeComponentsFacade) Import(src map[string]application.ComponentHolder) {
+	dst := inst.core.componentTable
+	if dst == nil {
+		dst = make(map[string]application.ComponentHolder)
+	}
+	if src == nil {
+		return
+	}
+	ctx := inst.core.context
+	for key := range src {
+		holder := src[key]
+		if holder == nil {
+			continue
+		}
+		dst[key] = holder.MakeChild(ctx)
+	}
+	inst.core.componentTable = dst
 }
 
-func (inst *runtimeComponentsFacade) Export(table map[string]application.ComponentHolder) map[string]application.ComponentHolder {
-	return table
+func (inst *runtimeComponentsFacade) Export(dst map[string]application.ComponentHolder) map[string]application.ComponentHolder {
+	src := inst.core.componentTable
+	if dst == nil {
+		dst = make(map[string]application.ComponentHolder)
+	}
+	if src == nil {
+		return dst
+	}
+	for key := range src {
+		dst[key] = src[key]
+	}
+	return dst
 }
 
 func (inst *runtimeComponentsFacade) GetComponent(name string) (lang.Object, error) {
-	return nil, nil
+	holder, err := inst.core.finder.findHolderById(name)
+	if err != nil {
+		return nil, err
+	}
+	return inst.core.loader.loadComponent(holder)
 }
 
 func (inst *runtimeComponentsFacade) GetComponentByClass(classSelector string) (lang.Object, error) {
-	return nil, nil
+	holder, err := inst.core.finder.findHolderByTypeName(classSelector)
+	if err != nil {
+		return nil, err
+	}
+	return inst.core.loader.loadComponent(holder)
 }
 
 func (inst *runtimeComponentsFacade) GetComponentsByClass(classSelector string) []lang.Object {
-	return nil
+	holders := inst.core.finder.selectHoldersByTypeName(classSelector)
+	results, err := inst.core.loader.loadComponents(holders)
+	if err != nil {
+		inst.core.context.GetErrorHandler().OnError(err)
+		return make([]lang.Object, 0)
+	}
+	return results
 }
 
 ////////////////////////////////////////////////////////////////////////////////

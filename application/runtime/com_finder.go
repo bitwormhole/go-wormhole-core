@@ -19,7 +19,7 @@ func (inst *componentFinder) findHolderById(id string) (application.ComponentHol
 }
 
 func (inst *componentFinder) findHolderByTypeName(name string) (application.ComponentHolder, error) {
-	list := inst.findHoldersByTypeName(name)
+	list := inst.selectHoldersByTypeName(name)
 	size := len(list)
 	if size == 1 {
 		return list[0], nil
@@ -29,7 +29,7 @@ func (inst *componentFinder) findHolderByTypeName(name string) (application.Comp
 	return nil, errors.New("there is no component, with type of " + name)
 }
 
-func (inst *componentFinder) findHoldersByTypeName(name string) []application.ComponentHolder {
+func (inst *componentFinder) selectHoldersByTypeName(name string) []application.ComponentHolder {
 	list := make([]application.ComponentHolder, 0)
 	table := inst.table
 	for key := range table {

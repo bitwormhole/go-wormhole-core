@@ -48,7 +48,7 @@ func (inst *comFactoryForComInfo) NewInstance() application.ComponentInstance {
 func (inst *comInstanceForComInfo) initial(info *ComInfo) error {
 	fnNew := info.OnNew
 	if fnNew == nil {
-		return errors.New("no func:OnNew for component:" + inst.info.GetID())
+		return errors.New("no func:OnNew for component:" + info.GetID())
 	}
 	inst.info = info
 	inst.target = fnNew()

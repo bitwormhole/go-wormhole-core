@@ -1,12 +1,15 @@
 package config
 
 import (
+	"log"
+
 	"github.com/bitwormhole/go-wormhole-core/application"
 )
 
 // Car class
 type Car struct {
 	id      string
+	model   string
 	context application.Context
 
 	driver *Driver
@@ -19,9 +22,15 @@ type Car struct {
 }
 
 func (inst *Car) start() error {
+
+	log.Output(0, "Car.start: "+inst.id)
+
 	return nil
 }
 
 func (inst *Car) stop() error {
+
+	log.Output(0, "Car.stop: "+inst.id)
+
 	return nil
 }

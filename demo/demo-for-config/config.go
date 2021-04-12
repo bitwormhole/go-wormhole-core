@@ -10,36 +10,112 @@ import (
 func Config(cfg application.ConfigBuilder) {
 
 	cfg.AddComponent(&config.ComInfo{
-		ID:    "x1",
-		Class: "x",
+		ID:    "seby",
+		Class: "driver",
 
-		OnInject: nil,
+		OnInject: func(obj lang.Object, context application.RuntimeContext) error {
+
+			helper := &injectHelper{context: context}
+			inst := obj.(*Driver)
+
+			inst.name = "seby"
+			inst.car = helper.getCar("car-y")
+			inst.birthday = "1999-09-10"
+			inst.sex = "female"
+
+			inst.car.driver = inst
+
+			return helper.err
+		},
+
+		OnNew: func() lang.Object {
+			return &Driver{}
+		},
 	})
 
 	cfg.AddComponent(&config.ComInfo{
-		ID:    "car1",
-		Class: "car",
-		Scope: application.ScopeSingleton,
+		ID:    "car-x",
+		Class: "car car-model-x",
+		Scope: application.ScopePrototype,
 
 		OnNew: func() lang.Object {
 			return &Car{}
 		},
 
 		OnInit: func(obj lang.Object) error {
-			car := obj.(Car)
+			car := obj.(*Car)
 			return car.start()
 		},
 
 		OnInject: func(obj lang.Object, context application.RuntimeContext) error {
 
-			car := obj.(Car)
-			getter := context.NewGetter(nil)
-			ec := getter.ErrorCollector()
+			car := obj.(*Car)
+			helper := &injectHelper{context: context}
 
-			car.driver = getter.GetComponent("driver").(*Driver)
-			ec.AddErrorIfNil(car.driver, "")
+			car.context = context
+			car.engine = nil
+			car.model = "X"
 
-			return ec.Result()
+			return helper.err
+		},
+	})
+
+	cfg.AddComponent(&config.ComInfo{
+		ID:    "car-y",
+		Class: "car car-model-y",
+		Scope: application.ScopePrototype,
+
+		OnNew: func() lang.Object {
+			return &Car{}
+		},
+
+		OnInit: func(obj lang.Object) error {
+			car := obj.(*Car)
+			return car.start()
+		},
+
+		OnInject: func(obj lang.Object, context application.RuntimeContext) error {
+
+			helper := &injectHelper{context: context}
+			car := obj.(*Car)
+
+			car.context = context
+			car.engine = helper.getEngine("car-y-engine")
+			car.model = "Y"
+			car.id = "GC17258"
+
+			return helper.err
+		},
+	})
+
+	cfg.AddComponent(&config.ComInfo{
+		ID:    "car-y-engine",
+		Class: "engine engine-y",
+		Scope: application.ScopePrototype,
+
+		OnNew: func() lang.Object {
+			return &Engine{}
+		},
+
+		OnInit: func(obj lang.Object) error {
+			engine := obj.(*Engine)
+			return engine.start()
+		},
+
+		OnDestroy: func(obj lang.Object) error {
+			engine := obj.(*Engine)
+			return engine.stop()
+		},
+
+		OnInject: func(obj lang.Object, context application.RuntimeContext) error {
+
+			helper := &injectHelper{context: context}
+			engine := obj.(*Engine)
+
+			engine.owner = helper.getCar("car-y")
+			engine.name = "car-y-engine"
+
+			return helper.err
 		},
 	})
 

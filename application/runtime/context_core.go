@@ -29,6 +29,7 @@ type runtimeContextCore struct {
 
 	// helper
 	finder       *componentFinder
+	loader       *runtimeComponentLoader
 	errorHandler lang.ErrorHandler
 
 	// data
@@ -55,7 +56,7 @@ type creationContextCore struct {
 
 	// helper
 	finder *componentFinder
-	loader *componentLoader
+	loader *creationComponentLoader
 
 	// data
 	pool  collection.ReleasePool
@@ -84,6 +85,7 @@ func createRuntimeContextCore() *runtimeContextCore {
 	inst.componentTable = comTable
 
 	inst.finder = &componentFinder{table: comTable}
+	inst.loader = &runtimeComponentLoader{core: inst}
 
 	inst.time1 = 0 // now
 
@@ -97,7 +99,7 @@ func createCreationContextCore(parent *runtimeContextCore) *creationContextCore 
 	facade := &creationContextFacade{core: inst}
 	proxy := &contextProxy{}
 	components := &creationComponentsFacade{core: inst}
-	loader := &componentLoader{core: inst}
+	loader := &creationComponentLoader{core: inst}
 
 	inst.parent = parent
 	inst.context = facade

@@ -2,5 +2,9 @@ package config
 
 // Driver class
 type Driver struct {
-	name string
+	id       string
+	name     string
+	birthday string
+	sex      string
+	car      *Car
 }

@@ -54,8 +54,10 @@ func (inst *creationContextFacade) GetComponents() application.Components {
 }
 
 func (inst *creationContextFacade) NewGetter(ec lang.ErrorCollector) application.ContextGetter {
-	// todo ...
-	return nil
+	ctx := inst.core.proxy
+	getter := &innerContextGetter{}
+	getter.init(ctx, ec)
+	return getter
 }
 
 func (inst *creationContextFacade) GetReleasePool() collection.ReleasePool {
@@ -109,8 +111,7 @@ func (inst *creationContextFacade) GetContext() application.RuntimeContext {
 }
 
 func (inst *creationContextFacade) Close() error {
-	// todo:  close CC
-	return nil
+	return inst.core.loader.startAllComponents()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,11 +122,7 @@ func (inst *creationComponentsFacade) GetComponent(name string) (lang.Object, er
 	if err != nil {
 		return nil, err
 	}
-	instance, err := inst.core.loader.loadComponent(holder)
-	if err != nil {
-		return nil, err
-	}
-	return instance.Get(), nil
+	return inst.core.loader.loadComponent(holder)
 }
 
 func (inst *creationComponentsFacade) GetComponentByClass(classSelector string) (lang.Object, error) {
@@ -133,34 +130,25 @@ func (inst *creationComponentsFacade) GetComponentByClass(classSelector string) 
 	if err != nil {
 		return nil, err
 	}
-	instance, err := inst.core.loader.loadComponent(holder)
-	if err != nil {
-		return nil, err
-	}
-	return instance.Get(), nil
+	return inst.core.loader.loadComponent(holder)
 }
 
 func (inst *creationComponentsFacade) GetComponentsByClass(classSelector string) []lang.Object {
-	holders := inst.core.finder.findHoldersByTypeName(classSelector)
+	holders := inst.core.finder.selectHoldersByTypeName(classSelector)
 	instances, err := inst.core.loader.loadComponents(holders)
 	if err != nil {
 		inst.core.proxy.current.GetErrorHandler().OnError(err)
 		return make([]lang.Object, 0)
 	}
-	results := inst.core.loader.toTargetArray(instances)
-	return results
+	return instances
 }
 
 func (inst *creationComponentsFacade) Export(table map[string]application.ComponentHolder) map[string]application.ComponentHolder {
-	// NOP
-	if table == nil {
-		table = make(map[string]application.ComponentHolder)
-	}
-	return table
+	return inst.core.parent.context.GetComponents().Export(table)
 }
 
-func (inst *creationComponentsFacade) Import(map[string]application.ComponentHolder) {
-	// NOP
+func (inst *creationComponentsFacade) Import(src map[string]application.ComponentHolder) {
+	inst.core.parent.context.GetComponents().Import(src)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

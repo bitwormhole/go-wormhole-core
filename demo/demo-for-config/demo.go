@@ -1,23 +1,22 @@
 package config
 
 import (
-	"testing"
+	"os"
 
 	"github.com/bitwormhole/go-wormhole-core/application"
 	"github.com/bitwormhole/go-wormhole-core/application/config"
 )
 
-func TestDemo(t *testing.T) {
+func Demo() int {
 
 	config := &config.AppConfig{}
 	Config(config)
 
-	context, err := application.Run(config)
+	context, err := application.Run(config, os.Args)
 	if err != nil {
-		t.Error(err)
-		return
+		panic(err)
 	}
 
 	code := application.Exit(context)
-	t.Logf("exit with code: %d", code)
+	return code
 }

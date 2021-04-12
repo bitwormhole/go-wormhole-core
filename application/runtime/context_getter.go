@@ -11,6 +11,11 @@ type innerContextGetter struct {
 }
 
 func (inst *innerContextGetter) init(context application.RuntimeContext, ec lang.ErrorCollector) {
+
+	if ec == nil {
+		ec = lang.NewErrorCollector()
+	}
+
 	inst.errors = ec
 	inst.context = context
 }
