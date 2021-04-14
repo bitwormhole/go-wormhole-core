@@ -29,6 +29,11 @@ func tryMain() error {
 		return err
 	}
 
+	context.GetComponents().GetComponent("seby")
+	context.GetComponents().GetComponent("car-x")
+	context.GetComponents().GetComponent("car-y")
+	context.GetComponents().GetComponent("car-z")
+
 	code := application.Exit(context)
 	fmt.Println("exited, code=", code)
 	// fmt.Println("  file.roots=", roots)

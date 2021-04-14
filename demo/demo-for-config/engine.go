@@ -17,7 +17,7 @@ func (inst *Engine) start() error {
 
 func (inst *Engine) stop() error {
 
-	log.Output(0, "Engine.start: "+inst.name)
+	log.Output(0, "Engine.stop: "+inst.name)
 
 	return nil
 }

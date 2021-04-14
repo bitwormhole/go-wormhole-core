@@ -47,6 +47,11 @@ func Config(cfg application.ConfigBuilder) {
 			return car.start()
 		},
 
+		OnDestroy: func(obj lang.Object) error {
+			car := obj.(*Car)
+			return car.stop()
+		},
+
 		OnInject: func(obj lang.Object, context application.RuntimeContext) error {
 
 			car := obj.(*Car)
@@ -72,6 +77,11 @@ func Config(cfg application.ConfigBuilder) {
 		OnInit: func(obj lang.Object) error {
 			car := obj.(*Car)
 			return car.start()
+		},
+
+		OnDestroy: func(obj lang.Object) error {
+			car := obj.(*Car)
+			return car.stop()
 		},
 
 		OnInject: func(obj lang.Object, context application.RuntimeContext) error {

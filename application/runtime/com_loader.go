@@ -174,7 +174,7 @@ func (inst *componentLoadingSorter) Len() int {
 func (inst *componentLoadingSorter) Less(i, j int) bool {
 	a := inst.items[i]
 	b := inst.items[j]
-	return a.loadingOrder < b.loadingOrder
+	return a.loadingOrder > b.loadingOrder
 }
 
 func (inst *componentLoadingSorter) Swap(i, j int) {

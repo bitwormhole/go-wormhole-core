@@ -35,5 +35,16 @@ func (inst *SingletonComponentHolder) GetContext() application.RuntimeContext {
 }
 
 func (inst *SingletonComponentHolder) MakeChild(context application.RuntimeContext) application.ComponentHolder {
-	return inst
+
+	singleton := inst.GetInstance()
+
+	if context == nil {
+		context = inst.context
+	}
+
+	child := &SingletonComponentHolder{}
+	child.info = inst.info
+	child.context = context
+	child.singleton = singleton
+	return child
 }

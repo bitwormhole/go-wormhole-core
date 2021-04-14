@@ -38,7 +38,7 @@ func (inst *SimpleReleasePool) Push(target lang.Disposable) {
 	if list == nil {
 		list = make([]lang.Disposable, 0)
 	}
-	list = append(list, target)
+	inst.list = append(list, target)
 }
 
 func CreateReleasePool() ReleasePool {
