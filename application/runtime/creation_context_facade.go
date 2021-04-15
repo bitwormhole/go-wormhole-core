@@ -117,6 +117,10 @@ func (inst *creationContextFacade) Close() error {
 ////////////////////////////////////////////////////////////////////////////////
 // impl creationComponentsFacade
 
+func (inst *creationComponentsFacade) GetComponentNameList(include_aliases bool) []string {
+	return inst.core.finder.listIds(include_aliases)
+}
+
 func (inst *creationComponentsFacade) GetComponent(name string) (lang.Object, error) {
 	holder, err := inst.core.finder.findHolderById(name)
 	if err != nil {

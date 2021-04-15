@@ -34,6 +34,18 @@ func tryMain() error {
 	context.GetComponents().GetComponent("car-y")
 	context.GetComponents().GetComponent("car-z")
 
+	fmt.Println("components.names(include aliases):")
+	namelist := context.GetComponents().GetComponentNameList(true)
+	for index := range namelist {
+		fmt.Println("    " + namelist[index])
+	}
+
+	fmt.Println("components.names(without aliases):")
+	namelist = context.GetComponents().GetComponentNameList(false)
+	for index := range namelist {
+		fmt.Println("    " + namelist[index])
+	}
+
 	code := application.Exit(context)
 	fmt.Println("exited, code=", code)
 	// fmt.Println("  file.roots=", roots)

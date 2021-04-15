@@ -10,6 +10,20 @@ type componentFinder struct {
 	table map[string]application.ComponentHolder
 }
 
+func (inst *componentFinder) listIds(include_aliases bool) []string {
+	table := inst.table
+	namelist := []string{}
+	for key := range table {
+		holder := table[key]
+		if include_aliases {
+			namelist = append(namelist, key)
+		} else if holder.IsOriginalName(key) {
+			namelist = append(namelist, key)
+		}
+	}
+	return namelist
+}
+
 func (inst *componentFinder) findHolderById(id string) (application.ComponentHolder, error) {
 	holder := inst.table[id]
 	if holder == nil {

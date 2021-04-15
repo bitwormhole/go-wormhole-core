@@ -10,8 +10,9 @@ import (
 func Config(cfg application.ConfigBuilder) {
 
 	cfg.AddComponent(&config.ComInfo{
-		ID:    "seby",
-		Class: "driver",
+		ID:      "seby",
+		Class:   "driver",
+		Aliases: []string{"badgirl", "faster", "car-y-owner"},
 
 		OnInject: func(obj lang.Object, context application.RuntimeContext) error {
 

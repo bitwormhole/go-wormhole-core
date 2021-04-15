@@ -63,6 +63,7 @@ type Components interface {
 	GetComponent(name string) (lang.Object, error)
 	GetComponentByClass(classSelector string) (lang.Object, error)
 	GetComponentsByClass(classSelector string) []lang.Object
+	GetComponentNameList(includeAliases bool) []string
 	////
 	Export(map[string]ComponentHolder) map[string]ComponentHolder
 	Import(map[string]ComponentHolder)

@@ -142,6 +142,10 @@ func (inst *runtimeComponentsFacade) Export(dst map[string]application.Component
 	return dst
 }
 
+func (inst *runtimeComponentsFacade) GetComponentNameList(includeAliases bool) []string {
+	return inst.core.finder.listIds(includeAliases)
+}
+
 func (inst *runtimeComponentsFacade) GetComponent(name string) (lang.Object, error) {
 	holder, err := inst.core.finder.findHolderById(name)
 	if err != nil {
