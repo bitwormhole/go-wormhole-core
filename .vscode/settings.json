@@ -2,5 +2,6 @@
     "go.alternateTools": {},
     "go.testFlags": [
         "-v"
-    ]
+    ],
+    "workbench.colorTheme": "Visual Studio Light"
 }
